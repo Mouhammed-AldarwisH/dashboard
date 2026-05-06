@@ -95,17 +95,59 @@ if ('serviceWorker' in navigator && 'Notification' in window) {
             .then(reg => console.log('تم تسجيل الـ Service Worker بنجاح.'))
             .catch(err => console.error('خطأ في تسجيل Service Worker:', err));
     });
+// دالة مساعدة لتحويل مفتاح VAPID للتشفير
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
 
-    // ربط نافذة طلب السماح بضغطة الزر
+// المفتاح العام للتشفير
+const publicVapidKey = 'BMoK0cvYJ1soiNqXO5mOt9TLCrSGWnZci0QGJX0LsxOYC-zNOvrMptuyDKHxHNLpCe-iuIlSC1gcvjBH4bTk2z8';
+
+if ('serviceWorker' in navigator && 'Notification' in window) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('تم تسجيل الـ Service Worker'))
+            .catch(err => console.error('خطأ:', err));
+    });
+
     const btnNotify = document.getElementById('btn-notify');
     if (btnNotify) {
         btnNotify.addEventListener('click', () => {
-            Notification.requestPermission().then(permission => {
+            Notification.requestPermission().then(async permission => {
                 if (permission === 'granted') {
-                    alert('تم تفعيل الإشعارات بنجاح!');
-                    btnNotify.style.display = 'none'; // إخفاء الزر بعد التفعيل
+                    try {
+                        // الحصول على هوية الاشتراك من المتصفح
+                        const registration = await navigator.serviceWorker.ready;
+                        const subscription = await registration.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+                        });
+
+                        // حفظ هوية الاشتراك في قاعدة بيانات Supabase
+                        const { error } = await supabaseClient
+                            .from('push_subscriptions')
+                            .insert([{ subscription: subscription }]);
+
+                        if (!error) {
+                            alert('تم التفعيل! جهازك جاهز الآن لاستقبال الإشعارات من السيرفر.');
+                            btnNotify.style.display = 'none'; // إخفاء الزر
+                        } else {
+                            console.error('خطأ في حفظ الاشتراك في قاعدة البيانات:', error);
+                            alert('حدث خطأ في ربط الاشتراك بقاعدة البيانات.');
+                        }
+                    } catch (err) {
+                        console.error('فشل في جلب Subscription:', err);
+                        alert('تعذر إنشاء الاشتراك، تأكد من أن الموقع يعمل بـ HTTPS.');
+                    }
                 } else {
-                    alert('تحتاج إلى السماح بالإشعارات من إعدادات المتصفح/الجوال.');
+                    alert('يجب السماح بالإشعارات للعمل في الخلفية.');
                 }
             });
         });
