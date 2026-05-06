@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة مراقبة الحساس</title>
+    <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>نظام المراقبة اللحظي</h1>
+        
+        <div class="card" id="status-card">
+            <h2>حالة الاتصال</h2>
+            <div id="sensor-status" class="status-indicator">جاري الاتصال بقاعدة البيانات...</div>
+        </div>
+
+        <div class="card" id="data-card">
+            <h2>أحدث القراءات</h2>
+            <div class="data-grid">
+                <div class="data-item">
+                    <span class="label">الحرارة:</span>
+                    <span id="val-temp" class="value">--</span> °C
+                </div>
+                <div class="data-item">
+                    <span class="label">الرطوبة:</span>
+                    <span id="val-hum" class="value">--</span> %
+                </div>
+                <div class="data-item">
+                    <span class="label">الضغط:</span>
+                    <span id="val-press" class="value">--</span> hPa
+                </div>
+                <div class="data-item">
+                    <span class="label">قراءة الغاز (200C):</span>
+                    <span id="val-gas" class="value">--</span>
+                </div>
+            </div>
+            <div class="time-stamp">آخر تحديث للقراءة: <span id="val-time">--</span></div>
+        </div>
+    </div>
+
+    <!-- استدعاء مكتبة Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- استدعاء ملف البرمجة الخاص بنا -->
+    <script src="app.js"></script>
+</body>
+</html>

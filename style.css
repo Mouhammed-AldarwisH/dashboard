@@ -1,0 +1,91 @@
+* {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #34495e;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.status-indicator {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #eee;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.status-online {
+    background-color: #e8f8f5;
+    color: #27ae60;
+}
+
+.status-offline {
+    background-color: #fdedec;
+    color: #c0392b;
+}
+
+.data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.data-item {
+    background: #f8f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.label {
+    display: block;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.time-stamp {
+    text-align: left;
+    font-size: 0.8rem;
+    color: #95a5a6;
+    margin-top: 15px;
+}
