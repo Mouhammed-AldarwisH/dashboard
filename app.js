@@ -1,7 +1,7 @@
 // 1. إعداد الاتصال بقاعدة البيانات
 const supabaseUrl = 'https://arpplnryhoqridtvtvkq.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFycHBsbnJ5aG9xcmlkdHZ0dmtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NjE4MDIsImV4cCI6MjA5MzUzNzgwMn0.Pi3H4XXrwFa80Xg2hTmjfub1tOQet2o-FK8bccvSU0A';
-// تم تغيير اسم المتغير هنا إلى supabaseClient لتجنب التعارض
+
 const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // 2. ربط عناصر HTML بالمتغيرات
@@ -87,14 +87,12 @@ function subscribeToRealtime() {
 // تشغيل الدوال عند تحميل الصفحة
 fetchInitialData();
 subscribeToRealtime();
-// 7. تسجيل الـ Service Worker وطلب الصلاحية عبر زر
-if ('serviceWorker' in navigator && 'Notification' in window) {
-    // تسجيل الحارس في الخلفية يعمل تلقائياً بصمت
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('تم تسجيل الـ Service Worker بنجاح.'))
-            .catch(err => console.error('خطأ في تسجيل Service Worker:', err));
-    });
+
+
+// ==========================================
+// قسم الإشعارات وإدارة الـ Service Worker
+// ==========================================
+
 // دالة مساعدة لتحويل مفتاح VAPID للتشفير
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -110,6 +108,7 @@ function urlBase64ToUint8Array(base64String) {
 // المفتاح العام للتشفير
 const publicVapidKey = 'BMoK0cvYJ1soiNqXO5mOt9TLCrSGWnZci0QGJX0LsxOYC-zNOvrMptuyDKHxHNLpCe-iuIlSC1gcvjBH4bTk2z8';
 
+// 7. تسجيل الـ Service Worker وطلب الصلاحية عبر زر
 if ('serviceWorker' in navigator && 'Notification' in window) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
