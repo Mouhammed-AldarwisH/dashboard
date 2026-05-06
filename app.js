@@ -87,23 +87,27 @@ function subscribeToRealtime() {
 // تشغيل الدوال عند تحميل الصفحة
 fetchInitialData();
 subscribeToRealtime();
-
-// 7. تسجيل الـ Service Worker وطلب صلاحية الإشعارات
+// 7. تسجيل الـ Service Worker وطلب الصلاحية عبر زر
 if ('serviceWorker' in navigator && 'Notification' in window) {
+    // تسجيل الحارس في الخلفية يعمل تلقائياً بصمت
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-            .then(reg => {
-                console.log('تم تسجيل الـ Service Worker بنجاح.');
-            })
+            .then(reg => console.log('تم تسجيل الـ Service Worker بنجاح.'))
             .catch(err => console.error('خطأ في تسجيل Service Worker:', err));
     });
 
-    // طلب إذن المستخدم لإظهار الإشعارات
-    Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            console.log('صلاحية الإشعارات ممنوحة.');
-        } else {
-            console.log('تم رفض صلاحية الإشعارات.');
-        }
-    });
+    // ربط نافذة طلب السماح بضغطة الزر
+    const btnNotify = document.getElementById('btn-notify');
+    if (btnNotify) {
+        btnNotify.addEventListener('click', () => {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    alert('تم تفعيل الإشعارات بنجاح!');
+                    btnNotify.style.display = 'none'; // إخفاء الزر بعد التفعيل
+                } else {
+                    alert('تحتاج إلى السماح بالإشعارات من إعدادات المتصفح/الجوال.');
+                }
+            });
+        });
+    }
 }
